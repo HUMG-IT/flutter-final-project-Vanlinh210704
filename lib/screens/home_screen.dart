@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../services/product_service.dart';
-import '../services/auth_service.dart';
 import '../widgets/product_item.dart';
 import 'product_form_screen.dart';
-import 'login_screen.dart';
 import 'profile_screen.dart';
 
 enum SortOption {
@@ -27,7 +25,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ProductService _productService = ProductService();
-  final AuthService _authService = AuthService();
   final TextEditingController _searchController = TextEditingController();
 
   String _searchQuery = '';
@@ -38,35 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
-  }
-
-  Future<void> _logout() async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Đăng xuất'),
-        content: const Text('Bạn có chắc chắn muốn đăng xuất?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Hủy'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Đăng xuất'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirm == true) {
-      await _authService.logout();
-      if (!mounted) return;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
-      );
-    }
   }
 
   Future<void> _deleteProduct(Product product) async {
